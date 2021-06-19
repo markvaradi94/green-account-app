@@ -22,6 +22,7 @@ class AccountApiClient(
     private val baseUrl: String,
     private val restTemplate: RestTemplate = RestTemplate()
 ) {
+
     companion object {
         private val LOG = LoggerFactory.getLogger(Account::class.java)
     }
