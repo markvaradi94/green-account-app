@@ -7,14 +7,18 @@ import org.springframework.stereotype.Service
 import ro.asis.account.service.model.entity.AccountEntity
 import ro.asis.account.service.repository.AccountDao
 import ro.asis.account.service.repository.AccountRepository
+import ro.asis.account.service.service.validator.AccountValidator
 import ro.asis.commons.exceptions.ResourceNotFoundException
 import ro.asis.commons.filters.AccountFilters
 import java.util.*
+import javax.validation.Valid
+import javax.validation.constraints.NotNull
 
 @Service
 class AccountService(
     private val dao: AccountDao,
     private val mapper: ObjectMapper,
+    private val validator: AccountValidator,
     private val repository: AccountRepository
 ) {
     companion object {
@@ -25,18 +29,27 @@ class AccountService(
 
     fun findAccount(accountId: String): Optional<AccountEntity> = repository.findById(accountId)
 
-    fun addAccount(newAccount: AccountEntity): AccountEntity = repository.save(newAccount)
+    fun addAccount(@Valid @NotNull newAccount: AccountEntity): AccountEntity {
+        validator.validateNewOrThrow(newAccount)
+        return repository.save(newAccount)
+    }
 
     fun deleteAccount(accountId: String): Optional<AccountEntity> {
+        validator.validateExistsOrThrow(accountId)
         val accountToDelete = repository.findById(accountId)
         accountToDelete.ifPresent { deleteExistingAccount(it) }
         return accountToDelete
     }
 
     fun patchAccount(accountId: String, patch: JsonPatch): AccountEntity {
+        validator.validateExistsOrThrow(accountId)
+
         val dbAccount = getOrThrow(accountId)
         val patchedAccountJson = patch.apply(mapper.valueToTree(dbAccount))
         val patchedAccount = mapper.treeToValue(patchedAccountJson, AccountEntity::class.java)
+
+        validator.validateReplaceOrThrow(accountId, patchedAccount)
+
         copyAccount(patchedAccount, dbAccount)
         return repository.save(dbAccount)
     }
