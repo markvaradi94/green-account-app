@@ -16,21 +16,17 @@ class AccountValidator(
     private val repository: AccountRepository
 ) {
 
-    fun validateReplaceOrThrow(accountId: String, newAccount: AccountEntity) {
+    fun validateReplaceOrThrow(accountId: String, newAccount: AccountEntity) =
         exists(accountId)
-            .or { validate(account = newAccount, newEntity = false) }
+            .or { validate(account = newAccount) }
             .ifPresent { throw it }
-    }
 
-    fun validateNewOrThrow(account: AccountEntity) {
-        validate(account = account, newEntity = true).ifPresent { throw it }
-    }
+    fun validateNewOrThrow(account: AccountEntity) =
+        validate(account = account).ifPresent { throw it }
 
-    fun validateExistsOrThrow(accountId: String) {
-        exists(accountId).ifPresent { throw it }
-    }
+    fun validateExistsOrThrow(accountId: String) = exists(accountId).ifPresent { throw it }
 
-    private fun validate(account: AccountEntity, newEntity: Boolean): Optional<ValidationException> {
+    private fun validate(account: AccountEntity): Optional<ValidationException> {
         invalidPhoneNumber(account).ifPresent { throw it }
         emailAlreadyExistsOrInvalid(account).ifPresent { throw it }
         usernameAlreadyExistsOrInvalid(account).ifPresent { throw it }
@@ -40,6 +36,7 @@ class AccountValidator(
 
     private fun emailAlreadyExistsOrInvalid(account: AccountEntity): Optional<ValidationException> {
         val emailIsValid = validateEmailAddress(account.email)
+
         return if (repository.existsByEmail(account.email))
             of(ValidationException("Account with email ${account.email} already exists"))
         else return if (!emailIsValid) of(ValidationException("Email address is not valid"))
