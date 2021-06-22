@@ -19,7 +19,8 @@ class AccountService(
     private val dao: AccountDao,
     private val mapper: ObjectMapper,
     private val validator: AccountValidator,
-    private val repository: AccountRepository
+    private val repository: AccountRepository,
+    private val notificationsService: AccountNotificationsService
 ) {
     companion object {
         private val LOG = LoggerFactory.getLogger(AccountEntity::class.java)
@@ -31,7 +32,9 @@ class AccountService(
 
     fun addAccount(@Valid @NotNull newAccount: AccountEntity): AccountEntity {
         validator.validateNewOrThrow(newAccount)
-        return repository.save(newAccount)
+        val dbAccount = repository.save(newAccount)
+        notificationsService.notifyAccountCreated(dbAccount)
+        return dbAccount
     }
 
     fun deleteAccount(accountId: String): Optional<AccountEntity> {
@@ -51,6 +54,7 @@ class AccountService(
         validator.validateReplaceOrThrow(accountId, patchedAccount)
 
         copyAccount(patchedAccount, dbAccount)
+        notificationsService.notifyAccountEdited(dbAccount)
         return repository.save(dbAccount)
     }
 
@@ -62,6 +66,7 @@ class AccountService(
 
     private fun deleteExistingAccount(account: AccountEntity) {
         LOG.info("Deleting account: $account")
+        notificationsService.notifyAccountDeleted(account)
         repository.delete(account)
     }
 

@@ -18,19 +18,23 @@ class AccountValidator(
 
     fun validateReplaceOrThrow(accountId: String, newAccount: AccountEntity) =
         exists(accountId)
-            .or { validate(account = newAccount) }
+            .or { validate(account = newAccount, newEntity = false) }
             .ifPresent { throw it }
 
     fun validateNewOrThrow(account: AccountEntity) =
-        validate(account = account).ifPresent { throw it }
+        validate(account = account, newEntity = true).ifPresent { throw it }
 
     fun validateExistsOrThrow(accountId: String) = exists(accountId).ifPresent { throw it }
 
-    private fun validate(account: AccountEntity): Optional<ValidationException> {
-        invalidPhoneNumber(account).ifPresent { throw it }
-        emailAlreadyExistsOrInvalid(account).ifPresent { throw it }
-        usernameAlreadyExistsOrInvalid(account).ifPresent { throw it }
-        passwordIsValid(account).ifPresent { throw it }
+    private fun validate(account: AccountEntity, newEntity: Boolean): Optional<ValidationException> {
+        if (newEntity) {
+            emailAlreadyExistsOrInvalid(account).ifPresent { throw it }
+            usernameAlreadyExistsOrInvalid(account).ifPresent { throw it }
+        }
+        usernameIsInvalid(account).ifPresent { throw it }
+        emailIsInvalid(account).ifPresent { throw it }
+        phoneNumberIsInvalid(account).ifPresent { throw it }
+        passwordIsInvalid(account).ifPresent { throw it }
         return empty()
     }
 
@@ -43,6 +47,12 @@ class AccountValidator(
         else empty()
     }
 
+    private fun emailIsInvalid(account: AccountEntity): Optional<ValidationException> {
+        val emailIsValid = validateEmailAddress(account.email)
+        return if (!emailIsValid) of(ValidationException("Email address is not valid"))
+        else empty()
+    }
+
     private fun validateEmailAddress(email: String): Boolean {
         val validEmailPattern =
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", CASE_INSENSITIVE)
@@ -50,7 +60,7 @@ class AccountValidator(
         return matcher.find()
     }
 
-    private fun passwordIsValid(account: AccountEntity): Optional<ValidationException> {
+    private fun passwordIsInvalid(account: AccountEntity): Optional<ValidationException> {
         val passwordIsValid = validatePassword(account.password)
         return if (!passwordIsValid) of(ValidationException("Password must be between 6 and 15 characters long"))
         else empty()
@@ -66,9 +76,15 @@ class AccountValidator(
         else empty()
     }
 
+    private fun usernameIsInvalid(account: AccountEntity): Optional<ValidationException> {
+        val usernameIsValid = validateUsername(account.username)
+        return if (!usernameIsValid) of(ValidationException("Username must be between 6 and 15 characters long"))
+        else empty()
+    }
+
     private fun validateUsername(username: String): Boolean = username.length in (6..15)
 
-    private fun invalidPhoneNumber(account: AccountEntity): Optional<ValidationException> {
+    private fun phoneNumberIsInvalid(account: AccountEntity): Optional<ValidationException> {
         val phoneUtil = PhoneNumberUtil.getInstance()
         val romanianNumberProto = phoneUtil.parse(account.phoneNumber, "RO")
 
