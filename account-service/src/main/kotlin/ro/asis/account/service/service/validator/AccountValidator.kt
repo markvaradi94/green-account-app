@@ -1,7 +1,10 @@
 package ro.asis.account.service.service.validator
 
+import com.google.i18n.phonenumbers.NumberParseException
 import com.google.i18n.phonenumbers.PhoneNumberUtil
+import com.google.i18n.phonenumbers.Phonenumber
 import org.springframework.stereotype.Component
+import org.springframework.web.client.HttpServerErrorException
 import ro.asis.account.service.model.entity.AccountEntity
 import ro.asis.account.service.repository.AccountRepository
 import ro.asis.commons.exceptions.ValidationException
@@ -86,7 +89,13 @@ class AccountValidator(
 
     private fun phoneNumberIsInvalid(account: AccountEntity): Optional<ValidationException> {
         val phoneUtil = PhoneNumberUtil.getInstance()
-        val romanianNumberProto = phoneUtil.parse(account.phoneNumber, "RO")
+        val romanianNumberProto: Phonenumber.PhoneNumber
+
+        try {
+            romanianNumberProto = phoneUtil.parse(account.phoneNumber, "RO")
+        } catch (exception: NumberParseException) {
+            return of(ValidationException(exception.localizedMessage))
+        }
 
         return if (!phoneUtil.isValidNumber(romanianNumberProto)) of(ValidationException("Phone number is not valid"))
         else empty()
