@@ -1,11 +1,12 @@
 package ro.asis.account.dto
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import org.bson.types.ObjectId
 import ro.asis.commons.enums.AccountType
 
 data class Account(
     @JsonProperty("id")
-    val id: String?,
+    val id: String = ObjectId.get().toHexString(),
 
     @JsonProperty("username")
     val username: String,

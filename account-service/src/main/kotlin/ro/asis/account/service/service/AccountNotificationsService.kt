@@ -4,9 +4,9 @@ import org.slf4j.LoggerFactory
 import org.springframework.amqp.core.TopicExchange
 import org.springframework.amqp.rabbit.core.RabbitTemplate
 import org.springframework.stereotype.Service
-import ro.asis.account.events.AccountCreationEvent
-import ro.asis.account.events.AccountDeletionEvent
-import ro.asis.account.events.AccountEditEvent
+import ro.asis.account.events.AccountCreatedEvent
+import ro.asis.account.events.AccountDeletedEvent
+import ro.asis.account.events.AccountModifiedEvent
 import ro.asis.account.service.model.entity.AccountEntity
 import ro.asis.account.service.model.mappers.AccountMapper
 
@@ -21,8 +21,8 @@ class AccountNotificationsService(
     }
 
     fun notifyAccountCreated(account: AccountEntity) {
-        val event = AccountCreationEvent(
-            accountId = account.id!!,
+        val event = AccountCreatedEvent(
+            accountId = account.id,
             accountType = account.type
         )
 
@@ -31,8 +31,8 @@ class AccountNotificationsService(
     }
 
     fun notifyAccountDeleted(account: AccountEntity) {
-        val event = AccountDeletionEvent(
-            accountId = account.id!!,
+        val event = AccountDeletedEvent(
+            accountId = account.id,
             accountType = account.type
         )
 
@@ -41,8 +41,8 @@ class AccountNotificationsService(
     }
 
     fun notifyAccountEdited(account: AccountEntity) {
-        val event = AccountEditEvent(
-            accountId = account.id!!,
+        val event = AccountModifiedEvent(
+            accountId = account.id,
             accountType = account.type,
             editedAccount = mapper.toApi(account)
         )

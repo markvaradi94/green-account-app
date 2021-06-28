@@ -76,7 +76,6 @@ class AccountApiClientIntegrationTest {
     @Test
     fun `WHEN requesting an account THEN correct response is received`() {
         val account = Account(
-            id = null,
             username = "testUser",
             password = "testPass",
             email = "testing@test51.test",
@@ -87,7 +86,7 @@ class AccountApiClientIntegrationTest {
         val addedAccount = accountClient.addAccount(account)
         idToDelete = addedAccount.id
 
-        val fetchedAccount = accountClient.getAccount(addedAccount.id!!)
+        val fetchedAccount = accountClient.getAccount(addedAccount.id)
             .orElseGet { null }
 
         assertThat(fetchedAccount).isNotNull
@@ -106,7 +105,6 @@ class AccountApiClientIntegrationTest {
     @Test
     fun `WHEN adding a valid new account THEN it is successfully added`() {
         val account = Account(
-            id = null,
             username = "testUser",
             password = "testPass",
             email = "testing@test51.test",
@@ -129,7 +127,6 @@ class AccountApiClientIntegrationTest {
     @Test
     fun `WHEN adding a new account with empty username THEN exception is thrown`() {
         val account = Account(
-            id = null,
             username = "",
             password = "testPass",
             email = "testing@test51.test",
@@ -143,7 +140,6 @@ class AccountApiClientIntegrationTest {
     @Test
     fun `WHEN adding a new account with empty email THEN exception is thrown`() {
         val account = Account(
-            id = null,
             username = "testUser",
             password = "testPass",
             email = "",
@@ -157,7 +153,6 @@ class AccountApiClientIntegrationTest {
     @Test
     fun `WHEN adding a new account with empty password THEN exception is thrown`() {
         val account = Account(
-            id = null,
             username = "testUser",
             password = "",
             email = "testing@test51.test",
@@ -171,7 +166,6 @@ class AccountApiClientIntegrationTest {
     @Test
     fun `WHEN adding a new account with empty phone number THEN exception is thrown`() {
         val account = Account(
-            id = null,
             username = "testUser",
             password = "testPass",
             email = "testing@test51.test",
@@ -185,7 +179,6 @@ class AccountApiClientIntegrationTest {
     @Test
     fun `WHEN adding a new account with invalid username THEN exception is thrown`() {
         val account = Account(
-            id = null,
             username = "murk",
             password = "testPass",
             email = "testing@test51.test",
@@ -199,7 +192,6 @@ class AccountApiClientIntegrationTest {
     @Test
     fun `WHEN adding a new account with invalid email THEN exception is thrown`() {
         val account = Account(
-            id = null,
             username = "testUser",
             password = "testPass",
             email = "notGood@email",
@@ -213,7 +205,6 @@ class AccountApiClientIntegrationTest {
     @Test
     fun `WHEN adding a new account with invalid password THEN exception is thrown`() {
         val account = Account(
-            id = null,
             username = "testUser",
             password = "nope",
             email = "testing@test51.test",
@@ -227,7 +218,6 @@ class AccountApiClientIntegrationTest {
     @Test
     fun `WHEN adding a new account with invalid phone number THEN exception is thrown`() {
         val account = Account(
-            id = null,
             username = "testUser",
             password = "testPass",
             email = "testing@test51.test",
@@ -241,7 +231,6 @@ class AccountApiClientIntegrationTest {
     @Test
     fun `WHEN adding a new account for the same username THEN exception is thrown`() {
         val account = Account(
-            id = null,
             username = "testUser",
             password = "testPass",
             email = "testing@test51.test",
@@ -253,7 +242,6 @@ class AccountApiClientIntegrationTest {
         idToDelete = addedAccount.id
 
         val secondAccount = Account(
-            id = null,
             username = "testUser",
             password = "otherPass",
             email = "some@new.email",
@@ -267,7 +255,6 @@ class AccountApiClientIntegrationTest {
     @Test
     fun `WHEN adding a new account for the same email THEN exception is thrown`() {
         val account = Account(
-            id = null,
             username = "testUser",
             password = "testPass",
             email = "testing@test51.test",
@@ -279,7 +266,6 @@ class AccountApiClientIntegrationTest {
         idToDelete = addedAccount.id
 
         val secondAccount = Account(
-            id = null,
             username = "testUserNew",
             password = "otherPass",
             email = "testing@test51.test",
@@ -293,7 +279,6 @@ class AccountApiClientIntegrationTest {
     @Test
     fun `WHEN deleting an account THEN it is correctly deleted`() {
         val account = Account(
-            id = null,
             username = "testUser",
             password = "testPass",
             email = "testing@test51.test",
@@ -303,7 +288,7 @@ class AccountApiClientIntegrationTest {
 
         val addedAccount = accountClient.addAccount(account)
 
-        val deletedAccount = accountClient.deleteAccount(addedAccount.id!!)
+        val deletedAccount = accountClient.deleteAccount(addedAccount.id)
             .orElseGet { null }
 
         assertThat(deletedAccount).isNotNull
@@ -339,7 +324,7 @@ class AccountApiClientIntegrationTest {
 //        idToDelete = addedAccount.id
 //
 //        val patchedAccount = Account(
-//            id = addedAccount.id!!,
+//            id = addedAccount.id,
 //            username = addedAccount.username,
 //            password = account.password,
 //            email = "different@email.com",
@@ -354,7 +339,7 @@ class AccountApiClientIntegrationTest {
 //
 //        val patch = JsonPatch.fromJson(model)
 //
-//        val finalAccount = accountClient.patchAccount(addedAccount.id!!, patch)
+//        val finalAccount = accountClient.patchAccount(addedAccount.id, patch)
 //            .orElseGet { null }
 //
 //        assertThat(finalAccount).isNotNull

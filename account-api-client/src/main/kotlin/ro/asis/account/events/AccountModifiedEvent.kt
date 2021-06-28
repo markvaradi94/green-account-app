@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import ro.asis.account.dto.Account
 import ro.asis.commons.enums.AccountType
 import ro.asis.commons.enums.EventType
-import ro.asis.commons.enums.EventType.MODIFIED
+import ro.asis.commons.enums.EventType.MODIFY
 
-data class AccountEditEvent(
+data class AccountModifiedEvent(
     @JsonProperty("accountId")
     val accountId: String,
 
@@ -14,7 +14,7 @@ data class AccountEditEvent(
     val accountType: AccountType,
 
     @JsonProperty("eventType")
-    val eventType: EventType = MODIFIED,
+    val eventType: EventType = MODIFY,
 
     @JsonProperty("editedAccount")
     val editedAccount: Account
