@@ -76,7 +76,6 @@ class AccountApiClientIntegrationTest {
     @Test
     fun `WHEN requesting an account THEN correct response is received`() {
         val account = Account(
-            username = "testUser",
             password = "testPass",
             email = "testing@test51.test",
             phoneNumber = "0744 459 789",
@@ -91,7 +90,6 @@ class AccountApiClientIntegrationTest {
 
         assertThat(fetchedAccount).isNotNull
         assertThat(fetchedAccount.id).isEqualTo(addedAccount.id)
-        assertThat(fetchedAccount.username).isEqualTo("testUser")
         assertThat(fetchedAccount.password).isEqualTo("testPass")
         assertThat(fetchedAccount.phoneNumber).isEqualTo("0744 459 789")
         assertThat(fetchedAccount.email).isEqualTo("testing@test51.test")
@@ -105,7 +103,6 @@ class AccountApiClientIntegrationTest {
     @Test
     fun `WHEN adding a valid new account THEN it is successfully added`() {
         val account = Account(
-            username = "testUser",
             password = "testPass",
             email = "testing@test51.test",
             phoneNumber = "0744459789",
@@ -117,7 +114,6 @@ class AccountApiClientIntegrationTest {
 
         assertThat(addedAccount).isNotNull
         assertThat(addedAccount.id).isNotNull
-        assertThat(addedAccount.username).isEqualTo("testUser")
         assertThat(addedAccount.password).isEqualTo("testPass")
         assertThat(addedAccount.email).isEqualTo("testing@test51.test")
         assertThat(addedAccount.phoneNumber).isEqualTo("0744459789")
@@ -125,22 +121,8 @@ class AccountApiClientIntegrationTest {
     }
 
     @Test
-    fun `WHEN adding a new account with empty username THEN exception is thrown`() {
-        val account = Account(
-            username = "",
-            password = "testPass",
-            email = "testing@test51.test",
-            phoneNumber = "0744 459 789",
-            type = PROVIDER
-        )
-
-        assertThrows<HttpClientErrorException.BadRequest> { accountClient.addAccount(account) }
-    }
-
-    @Test
     fun `WHEN adding a new account with empty email THEN exception is thrown`() {
         val account = Account(
-            username = "testUser",
             password = "testPass",
             email = "",
             phoneNumber = "0744 459 789",
@@ -153,7 +135,6 @@ class AccountApiClientIntegrationTest {
     @Test
     fun `WHEN adding a new account with empty password THEN exception is thrown`() {
         val account = Account(
-            username = "testUser",
             password = "",
             email = "testing@test51.test",
             phoneNumber = "0744 459 789",
@@ -166,7 +147,6 @@ class AccountApiClientIntegrationTest {
     @Test
     fun `WHEN adding a new account with empty phone number THEN exception is thrown`() {
         val account = Account(
-            username = "testUser",
             password = "testPass",
             email = "testing@test51.test",
             phoneNumber = "",
@@ -177,22 +157,8 @@ class AccountApiClientIntegrationTest {
     }
 
     @Test
-    fun `WHEN adding a new account with invalid username THEN exception is thrown`() {
-        val account = Account(
-            username = "murk",
-            password = "testPass",
-            email = "testing@test51.test",
-            phoneNumber = "0744 459 789",
-            type = PROVIDER
-        )
-
-        assertThrows<HttpClientErrorException.BadRequest> { accountClient.addAccount(account) }
-    }
-
-    @Test
     fun `WHEN adding a new account with invalid email THEN exception is thrown`() {
         val account = Account(
-            username = "testUser",
             password = "testPass",
             email = "notGood@email",
             phoneNumber = "0744 459 789",
@@ -205,7 +171,6 @@ class AccountApiClientIntegrationTest {
     @Test
     fun `WHEN adding a new account with invalid password THEN exception is thrown`() {
         val account = Account(
-            username = "testUser",
             password = "nope",
             email = "testing@test51.test",
             phoneNumber = "0744 459 789",
@@ -218,7 +183,6 @@ class AccountApiClientIntegrationTest {
     @Test
     fun `WHEN adding a new account with invalid phone number THEN exception is thrown`() {
         val account = Account(
-            username = "testUser",
             password = "testPass",
             email = "testing@test51.test",
             phoneNumber = "123 45",
@@ -229,33 +193,8 @@ class AccountApiClientIntegrationTest {
     }
 
     @Test
-    fun `WHEN adding a new account for the same username THEN exception is thrown`() {
-        val account = Account(
-            username = "testUser",
-            password = "testPass",
-            email = "testing@test51.test",
-            phoneNumber = "0744 459 789",
-            type = PROVIDER
-        )
-
-        val addedAccount = accountClient.addAccount(account)
-        idToDelete = addedAccount.id
-
-        val secondAccount = Account(
-            username = "testUser",
-            password = "otherPass",
-            email = "some@new.email",
-            phoneNumber = "0744 123 789",
-            type = CLIENT
-        )
-
-        assertThrows<HttpClientErrorException.BadRequest> { accountClient.addAccount(secondAccount) }
-    }
-
-    @Test
     fun `WHEN adding a new account for the same email THEN exception is thrown`() {
         val account = Account(
-            username = "testUser",
             password = "testPass",
             email = "testing@test51.test",
             phoneNumber = "0744 459 789",
@@ -266,7 +205,6 @@ class AccountApiClientIntegrationTest {
         idToDelete = addedAccount.id
 
         val secondAccount = Account(
-            username = "testUserNew",
             password = "otherPass",
             email = "testing@test51.test",
             phoneNumber = "0744 123 789",
@@ -279,7 +217,6 @@ class AccountApiClientIntegrationTest {
     @Test
     fun `WHEN deleting an account THEN it is correctly deleted`() {
         val account = Account(
-            username = "testUser",
             password = "testPass",
             email = "testing@test51.test",
             phoneNumber = "0744 459 789",
@@ -294,7 +231,6 @@ class AccountApiClientIntegrationTest {
         assertThat(deletedAccount).isNotNull
         assertThat(deletedAccount.id).isNotNull
         assertThat(deletedAccount.id).isEqualTo(addedAccount.id)
-        assertThat(deletedAccount.username).isEqualTo("testUser")
         assertThat(deletedAccount.password).isEqualTo("testPass")
         assertThat(deletedAccount.email).isEqualTo("testing@test51.test")
         assertThat(deletedAccount.phoneNumber).isEqualTo("0744 459 789")
@@ -313,7 +249,6 @@ class AccountApiClientIntegrationTest {
 //    fun `WHEN patching an existing account THEN it is correctly modified`() {
 //        val account = Account(
 //            id = null,
-//            username = "testUser",
 //            password = "testPass",
 //            email = "testing@test51.test",
 //            phoneNumber = "0744 459 789",
@@ -325,7 +260,6 @@ class AccountApiClientIntegrationTest {
 //
 //        val patchedAccount = Account(
 //            id = addedAccount.id,
-//            username = addedAccount.username,
 //            password = account.password,
 //            email = "different@email.com",
 //            phoneNumber = "0744 459 789",
@@ -345,7 +279,6 @@ class AccountApiClientIntegrationTest {
 //        assertThat(finalAccount).isNotNull
 //        assertThat(finalAccount.id).isNotNull
 //        assertThat(finalAccount.id).isEqualTo(addedAccount.id)
-//        assertThat(finalAccount.username).isEqualTo("testUser")
 //        assertThat(finalAccount.password).isEqualTo("testPass")
 //        assertThat(finalAccount.email).isEqualTo("testing@test51.test")
 //        assertThat(finalAccount.phoneNumber).isEqualTo("0744 459 789")

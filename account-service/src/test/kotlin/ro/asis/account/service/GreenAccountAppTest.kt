@@ -34,7 +34,6 @@ class GreenAccountAppTest(
         repository.save(
             AccountEntity(
                 id = "123",
-                username = "testUser",
                 password = "testPass",
                 email = "testing@test51.test",
                 phoneNumber = "0744 459 789",
@@ -45,7 +44,6 @@ class GreenAccountAppTest(
         repository.save(
             AccountEntity(
                 id = "567",
-                username = "testUser2",
                 password = "testPass2",
                 email = "testing@test52.test",
                 phoneNumber = "0733 459 000",
@@ -65,8 +63,8 @@ class GreenAccountAppTest(
         assertThat(result).isNotNull
         assertThat(result.size).isEqualTo(2)
         assertThat(result[1])
-            .extracting("username", "email", "phoneNumber", "type")
-            .containsExactly("testUser2", "testing@test52.test", "0733 459 000", CLIENT)
+            .extracting("email", "phoneNumber", "type")
+            .containsExactly("testing@test52.test", "0733 459 000", CLIENT)
     }
 
     @Test
@@ -74,7 +72,6 @@ class GreenAccountAppTest(
         repository.save(
             AccountEntity(
                 id = "123",
-                username = "testUser",
                 password = "testPass",
                 email = "testing@test51.test",
                 phoneNumber = "0744 459 789",
@@ -92,15 +89,14 @@ class GreenAccountAppTest(
 
         assertThat(result).isNotNull
         assertThat(result)
-            .extracting("username", "email", "phoneNumber", "type")
-            .containsExactly("testUser", "testing@test51.test", "0744 459 789", PROVIDER)
+            .extracting("email", "phoneNumber", "type")
+            .containsExactly("testing@test51.test", "0744 459 789", PROVIDER)
     }
 
     @Test
     fun `WHEN adding a new account response is correct`() {
         val account = Account(
             id = "123",
-            username = "testUser",
             password = "testPass",
             email = "testing@test51.test",
             phoneNumber = "0744 459 789",
@@ -122,7 +118,6 @@ class GreenAccountAppTest(
         repository.save(
             AccountEntity(
                 id = "123",
-                username = "testUser",
                 password = "testPass",
                 email = "testing@test51.test",
                 phoneNumber = "0744 459 789",

@@ -86,8 +86,6 @@ class AccountApiClient(
 
         ofNullable(filters.id)
             .ifPresent { builder.queryParam("id", it) }
-        ofNullable(filters.username)
-            .ifPresent { builder.queryParam("username", it) }
         ofNullable(filters.email)
             .ifPresent { builder.queryParam("email", it) }
         ofNullable(filters.phoneNumber)

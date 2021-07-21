@@ -8,9 +8,6 @@ data class Account(
     @JsonProperty("id")
     val id: String = ObjectId.get().toHexString(),
 
-    @JsonProperty("username")
-    val username: String,
-
     @JsonProperty("password")
     val password: String,
 

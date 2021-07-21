@@ -32,9 +32,7 @@ class AccountValidator(
     private fun validate(account: AccountEntity, newEntity: Boolean): Optional<ValidationException> {
         if (newEntity) {
             emailAlreadyExistsOrInvalid(account).ifPresent { throw it }
-            usernameAlreadyExistsOrInvalid(account).ifPresent { throw it }
         }
-        usernameIsInvalid(account).ifPresent { throw it }
         emailIsInvalid(account).ifPresent { throw it }
         phoneNumberIsInvalid(account).ifPresent { throw it }
         passwordIsInvalid(account).ifPresent { throw it }
@@ -70,22 +68,6 @@ class AccountValidator(
     }
 
     private fun validatePassword(password: String): Boolean = password.length in (6..15)
-
-    private fun usernameAlreadyExistsOrInvalid(account: AccountEntity): Optional<ValidationException> {
-        val usernameIsValid = validateUsername(account.username)
-        return if (repository.existsByUsername(account.username))
-            of(ValidationException("Account with username ${account.username} already exists"))
-        else return if (!usernameIsValid) of(ValidationException("Username must be between 6 and 15 characters long"))
-        else empty()
-    }
-
-    private fun usernameIsInvalid(account: AccountEntity): Optional<ValidationException> {
-        val usernameIsValid = validateUsername(account.username)
-        return if (!usernameIsValid) of(ValidationException("Username must be between 6 and 15 characters long"))
-        else empty()
-    }
-
-    private fun validateUsername(username: String): Boolean = username.length in (6..15)
 
     private fun phoneNumberIsInvalid(account: AccountEntity): Optional<ValidationException> {
         val phoneUtil = PhoneNumberUtil.getInstance()

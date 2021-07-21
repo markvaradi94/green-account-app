@@ -10,7 +10,6 @@ class AccountEntity(
     @Id
     var id: String = ObjectId.get().toHexString(),
 
-    var username: String,
     var password: String,
     var email: String,
     var phoneNumber: String,

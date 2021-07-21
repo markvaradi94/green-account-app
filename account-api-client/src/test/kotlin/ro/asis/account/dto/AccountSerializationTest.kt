@@ -11,7 +11,6 @@ class AccountSerializationTest {
     fun `WHEN deserializing Account THEN Json string is correct`() {
         val account = Account(
             id = "abc",
-            username = "testAccount",
             password = "testPassword",
             email = "test@mail.ro",
             phoneNumber = "0711 123 123",
@@ -21,7 +20,7 @@ class AccountSerializationTest {
         val result = ObjectMapper().writeValueAsString(account)
         assertEquals(
             result, """
-            {"id":"abc","username":"testAccount","password":"testPassword","email":"test@mail.ro","phoneNumber":"0711 123 123","type":"CLIENT"}
+            {"id":"abc","password":"testPassword","email":"test@mail.ro","phoneNumber":"0711 123 123","type":"CLIENT"}
         """.trimIndent()
         )
     }
@@ -29,7 +28,7 @@ class AccountSerializationTest {
     @Test
     fun `WHEN converting Json string to Account THEN result is correct`() {
         val json = """
-            {"id":"abc","username":"testAccount","password":"testPassword","email":"test@mail.ro","phoneNumber":"0711 123 123","type":"CLIENT"}
+            {"id":"abc","password":"testPassword","email":"test@mail.ro","phoneNumber":"0711 123 123","type":"CLIENT"}
         """.trimIndent()
 
         val result = ObjectMapper().readValue(json, Account::class.java)
@@ -37,7 +36,6 @@ class AccountSerializationTest {
             result,
             Account(
                 id = "abc",
-                username = "testAccount",
                 password = "testPassword",
                 email = "test@mail.ro",
                 phoneNumber = "0711 123 123",

@@ -10,7 +10,6 @@ class AccountMapper : ModelMapper<Account, AccountEntity> {
     override fun toApi(source: AccountEntity): Account {
         return Account(
             id = source.id,
-            username = source.username,
             password = source.password,
             email = source.email,
             phoneNumber = source.phoneNumber,
@@ -21,7 +20,6 @@ class AccountMapper : ModelMapper<Account, AccountEntity> {
     override fun toEntity(source: Account): AccountEntity {
         return AccountEntity(
             id = source.id,
-            username = source.username,
             password = source.password,
             email = source.email,
             phoneNumber = source.phoneNumber,

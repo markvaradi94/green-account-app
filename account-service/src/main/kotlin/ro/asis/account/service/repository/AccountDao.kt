@@ -25,10 +25,10 @@ class AccountDao(private val mongo: MongoTemplate) {
 
         ofNullable(filters.id)
             .ifPresent { criteria.add(Criteria.where("id").`is`(it)) }
-        ofNullable(filters.username)
-            .ifPresent { criteria.add(Criteria.where("username").regex(".*$it.*", "i")) }
+        ofNullable(filters.password)
+            .ifPresent { criteria.add(Criteria.where("password").`is`(it)) }
         ofNullable(filters.email)
-            .ifPresent { criteria.add(Criteria.where("email").regex(".*$it.*", "i")) }
+            .ifPresent { criteria.add(Criteria.where("email").`is`(it)) }
         ofNullable(filters.phoneNumber)
             .ifPresent { criteria.add(Criteria.where("phoneNumber").regex(".*$it.*", "i")) }
         ofNullable(filters.type)
