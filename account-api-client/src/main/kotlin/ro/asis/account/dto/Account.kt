@@ -3,6 +3,7 @@ package ro.asis.account.dto
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.bson.types.ObjectId
 import ro.asis.commons.enums.AccountType
+import ro.asis.commons.enums.AccountType.CLIENT
 
 data class Account(
     @JsonProperty("id")
@@ -18,5 +19,5 @@ data class Account(
     val phoneNumber: String,
 
     @JsonProperty("type")
-    val type: AccountType
+    val type: AccountType = CLIENT
 )
